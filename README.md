@@ -21,7 +21,7 @@ A modern, responsive personal portfolio website showcasing my journey as a Data 
 
 This portfolio website serves as a comprehensive showcase of my technical skills, projects, and professional background in data science and analytics. It was developed as part of my Week 7 capstone project for the professional development bootcamp.
 
-**Live Demo:** [Portfolio URL]
+**Live Demo:** [https://personal-portfolio-website-seven-ecru.vercel.app/]
 
 ## Features
 
