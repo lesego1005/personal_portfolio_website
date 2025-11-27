@@ -1,18 +1,48 @@
-import React, { useState } from 'react';
-import { BarChart3, Brain, Code, Database, Mail, Linkedin, Github, ExternalLink, ArrowRight, Moon, Sun, Download } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { BarChart3, Brain, Code, Database, Mail, Linkedin, Github, ExternalLink, ArrowRight, Moon, Sun, Download, Menu, X } from 'lucide-react';
 
 export default function DataSciencePortfolio() {
   const [isDark, setIsDark] = useState(false);
   const [hoveredProject, setHoveredProject] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
+
+  // Initialize dark mode from system preference
+  useEffect(() => {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setIsDark(prefersDark);
+  }, []);
+
+  // Track active section for navigation highlighting
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach((section) => observer.observe(section));
+
+    return () => sections.forEach((section) => observer.unobserve(section));
+  }, []);
 
   // Smooth scroll function
   const smoothScroll = (e, targetId) => {
     e.preventDefault();
+    setMobileMenuOpen(false);
     const target = document.querySelector(targetId);
     if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+      const offset = 80;
+      const targetPosition = target.offsetTop - offset;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
       });
     }
   };
@@ -78,30 +108,46 @@ export default function DataSciencePortfolio() {
   const textSecondary = isDark ? 'text-gray-400' : 'text-gray-600';
   const textTertiary = isDark ? 'text-gray-500' : 'text-gray-500';
   const borderColor = isDark ? 'border-gray-700' : 'border-gray-200';
-  const navBg = isDark ? 'bg-gray-900/90' : 'bg-white/90';
+  const navBg = isDark ? 'bg-gray-900/95' : 'bg-white/95';
   const btnPrimary = isDark ? 'bg-gray-100 text-gray-900 hover:bg-white' : 'bg-gray-900 text-white hover:bg-gray-800';
   const btnSecondary = isDark ? 'border-gray-600 text-gray-100 hover:bg-gray-800' : 'border-gray-300 text-gray-900 hover:bg-gray-50';
   const cardBg = isDark ? 'bg-gray-800' : 'bg-gray-50';
   const profileBorder = isDark ? 'border-gray-700' : 'border-gray-200';
+  const mobileMenuBg = isDark ? 'bg-gray-900' : 'bg-white';
+
+  const NavLink = ({ href, children }) => {
+    const isActive = activeSection === href.substring(1);
+    return (
+      <a 
+        href={href} 
+        onClick={(e) => smoothScroll(e, href)} 
+        className={`${isActive ? textColor : textSecondary} hover:${textColor} transition font-medium`}
+      >
+        {children}
+      </a>
+    );
+  };
 
   return (
     <div className={`min-h-screen ${bgColor} ${textColor} transition-colors duration-300`}>
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full ${navBg} backdrop-blur-sm z-40 border-b ${borderColor}`}>
-        <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
+      <nav className={`fixed top-0 w-full ${navBg} backdrop-blur-md z-50 border-b ${borderColor}`}>
+        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <a 
             href="#hero" 
             onClick={(e) => smoothScroll(e, '#hero')}
-            className={`text-lg font-medium ${textColor} cursor-pointer hover:opacity-70 transition`}
+            className={`text-lg font-semibold ${textColor} cursor-pointer hover:opacity-70 transition`}
           >
-            Data Science Portfolio
+            LR
           </a>
-          <div className="flex gap-8 items-center">
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex gap-8 items-center">
             <div className="flex gap-8 text-sm">
-              <a href="#about" onClick={(e) => smoothScroll(e, '#about')} className={`${textSecondary} hover:${textColor} transition`}>About</a>
-              <a href="#projects" onClick={(e) => smoothScroll(e, '#projects')} className={`${textSecondary} hover:${textColor} transition`}>Projects</a>
-              <a href="#skills" onClick={(e) => smoothScroll(e, '#skills')} className={`${textSecondary} hover:${textColor} transition`}>Skills</a>
-              <a href="#contact" onClick={(e) => smoothScroll(e, '#contact')} className={`${textSecondary} hover:${textColor} transition`}>Contact</a>
+              <NavLink href="#about">About</NavLink>
+              <NavLink href="#projects">Projects</NavLink>
+              <NavLink href="#skills">Skills</NavLink>
+              <NavLink href="#contact">Contact</NavLink>
             </div>
             <button
               onClick={() => setIsDark(!isDark)}
@@ -111,37 +157,70 @@ export default function DataSciencePortfolio() {
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex md:hidden items-center gap-3">
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className={`p-2 rounded-full ${textSecondary} hover:${textColor} transition`}
+              aria-label="Toggle dark mode"
+            >
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`p-2 ${textColor}`}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className={`md:hidden ${mobileMenuBg} border-t ${borderColor}`}>
+            <div className="px-6 py-4 flex flex-col gap-4 text-sm">
+              <NavLink href="#about">About</NavLink>
+              <NavLink href="#projects">Projects</NavLink>
+              <NavLink href="#skills">Skills</NavLink>
+              <NavLink href="#contact">Contact</NavLink>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
       <section id="hero" className="min-h-screen flex items-center justify-center px-6 pt-20">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl text-center md:text-left">
           {/* Profile Picture */}
-          <div className="mb-12">
+          <div className="mb-8 flex justify-center md:justify-start">
             <img
               src="Portrait.jpg"
               alt="Lesego Radebe"
-              className={`w-48 h-48 rounded-full object-cover border-2 ${profileBorder} object-[center_25%]`}
+              className={`w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 ${profileBorder} object-[center_25%] shadow-lg`}
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
             />
           </div>
           
-          <h1 className={`text-6xl font-light mb-6 ${textColor} tracking-tight`}>
+          <h1 className={`text-4xl md:text-6xl font-light mb-4 md:mb-6 ${textColor} tracking-tight`}>
             Lesego Radebe
           </h1>
-          <p className={`text-2xl ${textSecondary} mb-8 font-light`}>
+          <p className={`text-xl md:text-2xl ${textSecondary} mb-6 md:mb-8 font-light`}>
             Data Scientist & Analytics Professional
           </p>
-          <p className={`text-lg ${textTertiary} mb-12 max-w-2xl leading-relaxed`}>
+          <p className={`text-base md:text-lg ${textTertiary} mb-8 md:mb-12 max-w-2xl leading-relaxed mx-auto md:mx-0`}>
             Transforming complex data into actionable insights through machine learning, 
             statistical analysis, and compelling data visualisation.
           </p>
           
-          <div className="flex gap-4 mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 mb-8 md:mb-12 justify-center md:justify-start">
             <a 
               href="#contact" 
               onClick={(e) => smoothScroll(e, '#contact')}
-              className={`${btnPrimary} px-6 py-3 text-sm font-medium transition flex items-center gap-2`}
+              className={`${btnPrimary} px-6 py-3 text-sm font-medium transition flex items-center justify-center gap-2 rounded`}
             >
               Get In Touch
               <ArrowRight size={16} />
@@ -149,26 +228,27 @@ export default function DataSciencePortfolio() {
             <a 
               href="#projects" 
               onClick={(e) => smoothScroll(e, '#projects')}
-              className={`border ${btnSecondary} px-6 py-3 text-sm font-medium transition`}
+              className={`border ${btnSecondary} px-6 py-3 text-sm font-medium transition rounded`}
             >
               View Projects
             </a>
             <a 
-              href="/Real_N_Radebe.pdf" 
+              href="/CV.pdf" 
               download
-              className={`border ${btnSecondary} px-6 py-3 text-sm font-medium transition flex items-center gap-2`}
+              className={`border ${btnSecondary} px-6 py-3 text-sm font-medium transition flex items-center justify-center gap-2 rounded`}
             >
               <Download size={16} />
               Resume
             </a>
           </div>
 
-          <div className="flex gap-5">
+          <div className="flex gap-5 justify-center md:justify-start">
             <a 
               href="https://www.linkedin.com/in/lesego-radebe-a60b95204" 
               target="_blank"
               rel="noopener noreferrer"
               className={`${textTertiary} hover:${textColor} transition`}
+              aria-label="LinkedIn"
             >
               <Linkedin size={20} />
             </a>
@@ -177,12 +257,14 @@ export default function DataSciencePortfolio() {
               target="_blank"
               rel="noopener noreferrer"
               className={`${textTertiary} hover:${textColor} transition`}
+              aria-label="GitHub"
             >
-            <Github size={20} />
+              <Github size={20} />
             </a>
             <a 
               href="mailto:rlesego6@gmail.com" 
               className={`${textTertiary} hover:${textColor} transition`}
+              aria-label="Email"
             >
               <Mail size={20} />
             </a>
@@ -191,42 +273,42 @@ export default function DataSciencePortfolio() {
       </section>
 
       {/* About Section */}
-      <section id="about" className={`py-24 px-6 border-t ${borderColor}`}>
+      <section id="about" className={`py-16 md:py-24 px-6 border-t ${borderColor}`}>
         <div className="max-w-4xl mx-auto">
           <h2 className={`text-sm uppercase tracking-wider ${textTertiary} mb-8`}>About</h2>
           <div className={`space-y-6 ${textSecondary} leading-relaxed`}>
-            <p className="text-lg">
+            <p className="text-base md:text-lg">
               I'm a data scientist with a passion for uncovering insights hidden in complex datasets. 
               With expertise in machine learning, statistical modeling, and data visualisation, I help 
               organisations make data-driven decisions that drive real business impact.
             </p>
-            <p className="text-lg">
+            <p className="text-base md:text-lg">
               My approach combines rigorous statistical methodology with creative problem-solving to 
               tackle challenges across various domains including predictive analytics, customer behavior, 
               and operational optimisation.
             </p>
           </div>
-          <div className={`grid grid-cols-3 gap-12 mt-16 pt-12 border-t ${borderColor}`}>
+          <div className={`grid grid-cols-3 gap-6 md:gap-12 mt-12 md:mt-16 pt-8 md:pt-12 border-t ${borderColor}`}>
             <div>
-              <div className={`text-4xl font-light ${textColor} mb-2`}>1+</div>
-              <div className={`text-sm ${textTertiary} uppercase tracking-wider`}>Years Experience</div>
+              <div className={`text-3xl md:text-4xl font-light ${textColor} mb-2`}>1+</div>
+              <div className={`text-xs md:text-sm ${textTertiary} uppercase tracking-wider`}>Years Experience</div>
             </div>
             <div>
-              <div className={`text-4xl font-light ${textColor} mb-2`}>15+</div>
-              <div className={`text-sm ${textTertiary} uppercase tracking-wider`}>Projects Completed</div>
+              <div className={`text-3xl md:text-4xl font-light ${textColor} mb-2`}>15+</div>
+              <div className={`text-xs md:text-sm ${textTertiary} uppercase tracking-wider`}>Projects Completed</div>
             </div>
             <div>
-              <div className={`text-4xl font-light ${textColor} mb-2`}>10+</div>
-              <div className={`text-sm ${textTertiary} uppercase tracking-wider`}>Technologies</div>
+              <div className={`text-3xl md:text-4xl font-light ${textColor} mb-2`}>10+</div>
+              <div className={`text-xs md:text-sm ${textTertiary} uppercase tracking-wider`}>Technologies</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Projects Section - Collage Grid */}
-      <section id="projects" className={`py-24 px-6 border-t ${borderColor}`}>
+      {/* Projects Section */}
+      <section id="projects" className={`py-16 md:py-24 px-6 border-t ${borderColor}`}>
         <div className="max-w-6xl mx-auto">
-          <h2 className={`text-sm uppercase tracking-wider ${textTertiary} mb-12`}>Featured Projects</h2>
+          <h2 className={`text-sm uppercase tracking-wider ${textTertiary} mb-8 md:mb-12`}>Featured Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((project) => (
               <a
@@ -234,7 +316,7 @@ export default function DataSciencePortfolio() {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative overflow-hidden aspect-[4/3] cursor-pointer"
+                className="group relative overflow-hidden aspect-[4/3] cursor-pointer rounded-lg"
                 onMouseEnter={() => setHoveredProject(project.id)}
                 onMouseLeave={() => setHoveredProject(null)}
               >
@@ -243,6 +325,9 @@ export default function DataSciencePortfolio() {
                   src={project.image} 
                   alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => {
+                    e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23333" width="400" height="300"/%3E%3Ctext fill="%23fff" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle"%3EImage%3C/text%3E%3C/svg%3E';
+                  }}
                 />
                 
                 {/* Overlay */}
@@ -250,7 +335,7 @@ export default function DataSciencePortfolio() {
                 
                 {/* Content */}
                 <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
-                  <h3 className="text-2xl font-light mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <h3 className="text-xl md:text-2xl font-light mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     {project.title}
                   </h3>
                   
@@ -268,7 +353,7 @@ export default function DataSciencePortfolio() {
                       ))}
                     </div>
 
-                    <div className="flex items-center gap-4 text-xs text-gray-300">
+                    <div className="flex items-center gap-4 text-xs text-gray-300 flex-wrap">
                       {project.metrics.slice(0, 2).map((metric, idx) => (
                         <span key={idx}>• {metric}</span>
                       ))}
@@ -287,10 +372,10 @@ export default function DataSciencePortfolio() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className={`py-24 px-6 border-t ${borderColor}`}>
+      <section id="skills" className={`py-16 md:py-24 px-6 border-t ${borderColor}`}>
         <div className="max-w-5xl mx-auto">
-          <h2 className={`text-sm uppercase tracking-wider ${textTertiary} mb-12`}>Technical Skills</h2>
-          <div className="grid md:grid-cols-2 gap-12">
+          <h2 className={`text-sm uppercase tracking-wider ${textTertiary} mb-8 md:mb-12`}>Technical Skills</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             {Object.entries(skills).map(([category, items]) => (
               <div key={category} className={`pb-8 border-b ${borderColor}`}>
                 <div className="flex items-center gap-3 mb-6">
@@ -317,14 +402,14 @@ export default function DataSciencePortfolio() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className={`py-24 px-6 border-t ${borderColor}`}>
+      <section id="contact" className={`py-16 md:py-24 px-6 border-t ${borderColor}`}>
         <div className="max-w-3xl mx-auto">
-          <h2 className={`text-sm uppercase tracking-wider ${textTertiary} mb-12`}>Let's Connect</h2>
-          <p className={`text-2xl font-light ${textColor} mb-12 leading-relaxed`}>
+          <h2 className={`text-sm uppercase tracking-wider ${textTertiary} mb-8 md:mb-12`}>Let's Connect</h2>
+          <p className={`text-xl md:text-2xl font-light ${textColor} mb-8 md:mb-12 leading-relaxed`}>
             I'm always interested in hearing about new opportunities and collaborations.
           </p>
           <div className="space-y-4">
-            <a href="mailto:rlesego6@gmail.com" className={`flex items-center gap-3 ${textSecondary} hover:${textColor} transition text-lg`}>
+            <a href="mailto:rlesego6@gmail.com" className={`flex items-center gap-3 ${textSecondary} hover:${textColor} transition text-base md:text-lg`}>
               <Mail size={20} />
               rlesego6@gmail.com
             </a>
@@ -332,7 +417,7 @@ export default function DataSciencePortfolio() {
               href="https://www.linkedin.com/in/lesego-radebe-a60b95204" 
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center gap-3 ${textSecondary} hover:${textColor} transition text-lg`}>
+              className={`flex items-center gap-3 ${textSecondary} hover:${textColor} transition text-base md:text-lg`}>
               <Linkedin size={20} />
               LinkedIn Profile
             </a>
@@ -340,7 +425,7 @@ export default function DataSciencePortfolio() {
               href="https://github.com/lesego1005" 
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center gap-3 ${textSecondary} hover:${textColor} transition text-lg`}>
+              className={`flex items-center gap-3 ${textSecondary} hover:${textColor} transition text-base md:text-lg`}>
               <Github size={20} />
               GitHub Profile
             </a>
