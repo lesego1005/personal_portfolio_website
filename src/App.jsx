@@ -47,6 +47,15 @@ export default function DataSciencePortfolio() {
     },
     {
       id: 4,
+      title: "Data Pipeline Builder – SQL & ETL",
+      description: "Complete data engineering workflow featuring Azure SQL Database, Python ETL pipeline, cloud storage integration, and interactive Streamlit dashboard for data visualisation.",
+      technologies: ["Azure SQL", "Python", "Pandas", "Azure Blob Storage", "Streamlit"],
+      metrics: ["Cloud ETL Pipeline", "Azure Integration", "Team Collaboration"],
+      image: "pipeline.png",
+      link: "https://github.com/PhalePallo/data-pipeline-builder"
+    },
+    {
+      id: 5,
       title: "AI Coding Assistant",
       description: "Built an intelligent coding assistant web application that helps developers write, debug, and optimize code using AI-powered suggestions and real-time assistance.",
       technologies: ["HTML", "CSS", "JavaScript", "Node.js"],
