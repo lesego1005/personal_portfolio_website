@@ -1,13 +1,13 @@
 # Portfolio Reflection
 
 ## What I Learned
-In the Project Y & CAPACITI 2-Month Bootcamp (August 2025), I gained foundational skills across Generative AI, Low-Code Development, Data Engineering, and Cloud Fundamentals. Week 1 covered Git, Agile, and environment setup. Week 2 focused on prompt engineering with ChatGPT, Gemini, and Hugging Face, including AI ethics. Week 3 involved building Power Apps with AI assistance. Week 4 taught SQL and Python ETL pipelines. Weeks 5-6 prepared me for AWS Cloud Practitioner and AZ-900 certifications via hands-on labs. Week 7 introduced Docker and CI/CD. Week 8's capstone integrated all for a portfolio project. This broad exposure helped identify my interests for specialisation.
+In the 2-Month Bootcamp, I gained foundational skills across Generative AI, Low-Code Development, Data Engineering, and Cloud Fundamentals. Week 1 covered Git, Agile, and environment setup. Week 2 focused on prompt engineering with ChatGPT and Gemini, including AI ethics. Week 3 involved building Power Apps with AI assistance. Week 4 taught SQL and Python ETL pipelines. Weeks 5-6 prepared me for AWS Cloud Practitioner and AZ-900 certifications via hands-on labs. Week 7 introduced Docker and CI/CD. Week 8's capstone integrated all for a portfolio project. This broad exposure helped identify my interests for specialisation.
 
 ## My Technical Strengths
 - **Generative AI**: Strong in prompt engineering and ethical AI application, as shown in mini-projects.
-- **Low-Code**: Excelled in Power Apps and Automate, scoring high on assessments.
-- **Data Engineering**: Proficient in SQL queries and ETL with Python/Pandas.
-- **Cloud**: Mastered AWS/Azure basics, with >70% on practice exams and deployments.
+- **Low-Code**: Excelled in Power Apps and Automate.
+- **Data Engineering**: Proficient in ETL with Python/Pandas.
+- **Cloud**: Mastered AWS/Azure basics, with >70% on coursera assessments and deployments.
 - **DevOps**: Skilled in containerisation and pipelines, adapting quickly to tools.
 
 ## How the Capstone Integrates Bootcamp Concepts
