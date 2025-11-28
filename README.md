@@ -12,10 +12,8 @@ A modern, responsive personal portfolio website showcasing my journey as a Data 
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
 - [Customisation](#customisation)
 - [Deployment](#deployment)
-- [Contact](#contact)
 
 ## Overview
 
@@ -146,7 +144,7 @@ The portfolio uses Tailwind CSS. Modify color classes in the component:
 ### 4. AI Coding Assistant
 - Intelligent web application for code assistance
 - Technologies: HTML, CSS, JavaScript, Node.js
-- [View Project →](https://github.com/lesego1005/ai-coding-assistant)
+- [View Project →](https://github.com/lesego1005/ChatBot_Project)
 
 ## Key Metrics
 
